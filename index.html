@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NaHv'S Barbería — Reservá tu turno</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Raleway:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --negro: #0a0a0a;
+  --negro2: #111111;
+  --negro3: #1a1a1a;
+  --rojo: #c0392b;
+  --rojo2: #e74c3c;
+  --dorado: #d4af37;
+  --dorado2: #f0cc50;
+  --dorado3: #b8962e;
+  --blanco: #f5f5f0;
+  --gris: #888888;
+  --gris2: #555555;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+body {
+  font-family: 'Raleway', sans-serif;
+  background: var(--negro);
+  color: var(--blanco);
+  overflow-x: hidden;
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--negro2); }
+::-webkit-scrollbar-thumb { background: var(--dorado3); border-radius: 2px; }
+
+/* ── NAV ── */
+nav {
+  position: fixed; top:0; left:0; right:0; z-index:100;
+  background: rgba(10,10,10,0.95);
+  border-bottom: 1px solid rgba(212,175,55,0.2);
+  backdrop-filter: blur(10px);
+  padding: 14px 24px;
+  display: flex; align-items:center; justify-content:space-between;
+}
+.nav-logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px; font-weight: 900;
+  color: var(--dorado);
+  letter-spacing: 2px;
+  text-shadow: 0 0 20px rgba(212,175,55,0.4);
+}
+.nav-logo span { color: var(--rojo); }
+.nav-links { display:flex; gap:24px; }
+.nav-links a {
+  color: var(--gris); font-size: 13px; font-weight: 600;
+  text-decoration: none; letter-spacing: 1px; text-transform: uppercase;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--dorado); }
+
+/* ── HERO ── */
+.hero {
+  min-height: 100vh;
+  background:
+    linear-gradient(to bottom, rgba(10,10,10,0.7) 0%, rgba(10,10,10,0.5) 50%, rgba(10,10,10,0.95) 100%),
+    url('https://cdn.pixabay.com/photo/2017/04/03/16/16/barber-2198599_1280.jpg') center/cover no-repeat;
+  display: flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  text-align:center;
+  padding: 120px 24px 80px;
+  position: relative;
+}
+.hero::before {
+  content:'';
+  position:absolute; inset:0;
+  background: repeating-linear-gradient(
+    0deg, transparent, transparent 2px,
+    rgba(212,175,55,0.015) 2px, rgba(212,175,55,0.015) 4px
+  );
+  pointer-events:none;
+}
+.hero-badge {
+  display: inline-block;
+  border: 1px solid var(--dorado3);
+  color: var(--dorado);
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 4px; text-transform: uppercase;
+  padding: 6px 20px; border-radius: 2px;
+  margin-bottom: 24px;
+  background: rgba(212,175,55,0.05);
+}
+.hero h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(52px, 10vw, 96px);
+  font-weight: 900;
+  line-height: 1;
+  color: var(--blanco);
+  margin-bottom: 8px;
+}
+.hero h1 span { color: var(--dorado); }
+.hero-apostrophe { color: var(--rojo); }
+.hero-sub {
+  font-size: 14px; font-weight: 500; letter-spacing: 3px;
+  text-transform: uppercase; color: var(--gris);
+  margin-bottom: 16px;
+}
+.hero-tagline {
+  font-size: 17px; color: rgba(245,245,240,0.7);
+  max-width: 420px; line-height: 1.7;
+  margin-bottom: 40px;
+}
+.hero-cta {
+  display: flex; gap: 14px; flex-wrap:wrap; justify-content:center;
+}
+.btn-gold {
+  background: linear-gradient(135deg, var(--dorado3), var(--dorado), var(--dorado2));
+  color: var(--negro);
+  padding: 15px 36px; border:none; border-radius: 2px;
+  font-family: 'Raleway', sans-serif;
+  font-size: 13px; font-weight: 800;
+  letter-spacing: 2px; text-transform: uppercase;
+  cursor: pointer; transition: all 0.25s;
+  box-shadow: 0 4px 24px rgba(212,175,55,0.35);
+}
+.btn-gold:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(212,175,55,0.5); }
+.btn-outline {
+  background: transparent;
+  color: var(--blanco);
+  padding: 15px 36px;
+  border: 1px solid rgba(245,245,240,0.3);
+  border-radius: 2px;
+  font-family: 'Raleway', sans-serif;
+  font-size: 13px; font-weight: 700;
+  letter-spacing: 2px; text-transform: uppercase;
+  cursor: pointer; transition: all 0.25s;
+}
+.btn-outline:hover { border-color: var(--dorado); color: var(--dorado); }
+
+.hero-stats {
+  position: absolute; bottom: 40px;
+  display: flex; gap: 48px;
+}
+.stat { text-align:center; }
+.stat-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px; font-weight: 900; color: var(--dorado);
+}
+.stat-label { font-size: 11px; letter-spacing: 2px; color: var(--gris); text-transform:uppercase; }
+
+/* ── SECCIONES GENERALES ── */
+section { padding: 80px 24px; }
+.section-tag {
+  display: inline-block;
+  font-size: 11px; font-weight: 700; letter-spacing: 4px;
+  text-transform: uppercase; color: var(--rojo);
+  margin-bottom: 12px;
+}
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(32px, 5vw, 52px); font-weight: 900;
+  color: var(--blanco); line-height: 1.1;
+  margin-bottom: 48px;
+}
+.section-title span { color: var(--dorado); }
+.divider {
+  width: 60px; height: 2px;
+  background: linear-gradient(to right, var(--rojo), var(--dorado));
+  margin: 12px 0 32px;
+}
+.max-w { max-width: 1100px; margin: 0 auto; }
+
+/* ── HORARIOS BANNER ── */
+.horarios-banner {
+  background: linear-gradient(135deg, var(--rojo) 0%, #8b0000 100%);
+  padding: 16px 24px;
+  text-align: center;
+  font-size: 13px; font-weight: 700; letter-spacing: 2px;
+  color: white; text-transform: uppercase;
+  border-top: 1px solid rgba(212,175,55,0.3);
+  border-bottom: 1px solid rgba(212,175,55,0.3);
+}
+.horarios-banner span { color: var(--dorado2); margin: 0 8px; }
+
+/* ── SERVICIOS ── */
+#servicios { background: var(--negro2); }
+.servicios-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2px;
+}
+.servicio-card {
+  background: var(--negro3);
+  padding: 32px 28px;
+  border: 1px solid rgba(212,175,55,0.08);
+  transition: all 0.3s;
+  position: relative; overflow: hidden;
+  cursor: default;
+}
+.servicio-card::before {
+  content:'';
+  position:absolute; top:0; left:0; right:0; height:2px;
+  background: linear-gradient(to right, var(--rojo), var(--dorado));
+  transform: scaleX(0); transform-origin: left;
+  transition: transform 0.3s;
+}
+.servicio-card:hover { background: #1f1f1f; border-color: rgba(212,175,55,0.2); }
+.servicio-card:hover::before { transform: scaleX(1); }
+.servicio-ico {
+  font-size: 28px; margin-bottom: 14px;
+}
+.servicio-nombre {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px; font-weight: 700;
+  color: var(--blanco); margin-bottom: 6px;
+}
+.servicio-desc {
+  font-size: 13px; color: var(--gris);
+  line-height: 1.6; margin-bottom: 18px;
+}
+.servicio-precio {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px; font-weight: 900;
+  color: var(--dorado);
+}
+.servicio-precio .moneda {
+  font-size: 16px; color: var(--dorado3); margin-right: 2px;
+}
+.servicio-tag {
+  display: inline-block;
+  font-size: 10px; font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase; padding: 3px 10px; border-radius: 2px;
+  margin-top: 10px;
+}
+.tag-promo {
+  background: rgba(192,57,43,0.2); color: var(--rojo2);
+  border: 1px solid rgba(192,57,43,0.3);
+}
+.tag-domicilio {
+  background: rgba(212,175,55,0.1); color: var(--dorado);
+  border: 1px solid rgba(212,175,55,0.2);
+}
+
+/* ── PROMO AMIGO ── */
+.promo-amigo-banner {
+  background: linear-gradient(135deg, #1a0a0a, #2d0d0d);
+  border: 1px solid rgba(192,57,43,0.4);
+  border-radius: 4px;
+  padding: 32px 36px;
+  display: flex; align-items:center; gap: 28px;
+  margin-top: 32px;
+  position: relative; overflow:hidden;
+}
+.promo-amigo-banner::before {
+  content:'';
+  position:absolute; top:-30px; right:-30px;
+  width:120px; height:120px; border-radius:50%;
+  background: rgba(192,57,43,0.1);
+}
+.promo-ico { font-size: 44px; flex-shrink:0; }
+.promo-text h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px; font-weight: 900; color: var(--dorado);
+  margin-bottom: 6px;
+}
+.promo-text p { font-size: 14px; color: rgba(245,245,240,0.75); line-height:1.6; }
+.promo-badge {
+  margin-left: auto; flex-shrink:0;
+  background: var(--rojo);
+  color: white; font-size: 28px; font-weight: 900;
+  font-family: 'Playfair Display', serif;
+  padding: 14px 20px; border-radius: 4px;
+  text-align:center; line-height:1;
+}
+.promo-badge small { display:block; font-size:10px; font-weight:600; letter-spacing:2px; font-family:'Raleway',sans-serif; }
+
+/* ── DOMICILIO ── */
+.domicilio-card {
+  background: linear-gradient(135deg, #0f0f0f, #1a1206);
+  border: 1px solid rgba(212,175,55,0.25);
+  border-radius: 4px;
+  padding: 28px 32px;
+  display: flex; align-items:center; gap:24px;
+  margin-top: 16px;
+}
+.domicilio-card h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px; font-weight: 700; color: var(--dorado); margin-bottom: 6px;
+}
+.domicilio-card p { font-size: 13px; color: var(--gris); line-height:1.6; }
+.domicilio-extra {
+  margin-left:auto; flex-shrink:0; text-align:right;
+}
+.domicilio-extra .precio-extra {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px; font-weight:900; color: var(--dorado);
+}
+.domicilio-extra small { font-size:11px; color:var(--gris); display:block; }
+
+/* ── GALERÍA ── */
+#galeria { background: var(--negro); }
+.galeria-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+}
+.galeria-item {
+  position: relative; overflow:hidden;
+  aspect-ratio: 3/4;
+  cursor: pointer;
+}
+.galeria-item img {
+  width:100%; height:100%; object-fit:cover;
+  transition: transform 0.5s;
+  filter: grayscale(30%);
+}
+.galeria-item:hover img { transform: scale(1.05); filter: grayscale(0%); }
+.galeria-item::after {
+  content:'';
+  position:absolute; inset:0;
+  background: linear-gradient(to top, rgba(10,10,10,0.65) 0%, transparent 55%);
+}
+.galeria-label {
+  position:absolute; bottom:10px; left:12px; z-index:2;
+  font-size:11px; font-weight:700; letter-spacing:1.5px;
+  color:rgba(245,245,240,0.9); text-transform:uppercase;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+}
+/* Placeholder slot vacío */
+.slot-placeholder {
+  width:100%; height:100%;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:10px;
+  background: linear-gradient(135deg, #141414, #1c1206);
+  border: 1.5px dashed rgba(212,175,55,0.3);
+  transition: border-color 0.2s, background 0.2s;
+}
+.slot:hover .slot-placeholder {
+  border-color: rgba(212,175,55,0.7);
+  background: linear-gradient(135deg, #1a1a0a, #221a06);
+}
+.slot-ico { font-size: 32px; opacity: 0.6; }
+.slot-txt {
+  font-size: 11px; font-weight: 700; letter-spacing: 1px;
+  text-transform: uppercase; color: rgba(212,175,55,0.5);
+  text-align: center; line-height: 1.5;
+}
+/* Botón borrar foto */
+.slot-del {
+  position: absolute; top: 8px; right: 8px; z-index: 5;
+  width: 26px; height: 26px; border-radius: 50%;
+  background: rgba(192,57,43,0.85); border: none;
+  color: white; font-size: 13px; font-weight: 700;
+  cursor: pointer; display: flex; align-items:center; justify-content:center;
+  transition: background 0.2s;
+}
+.slot-del:hover { background: #c0392b; }
+
+/* ── RESERVA ── */
+#reserva { background: var(--negro2); }
+.reserva-container {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items:start;
+}
+.reserva-info h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 42px; font-weight: 900; color: var(--blanco);
+  margin-bottom: 16px; line-height: 1.1;
+}
+.reserva-info h2 span { color: var(--dorado); }
+.reserva-info p { font-size: 15px; color: var(--gris); line-height: 1.8; margin-bottom: 28px; }
+.info-row {
+  display: flex; align-items:center; gap:12px;
+  padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.06);
+  font-size: 14px; color: rgba(245,245,240,0.8);
+}
+.info-row:last-child { border-bottom:none; }
+.info-ico { font-size: 20px; width:32px; flex-shrink:0; }
+
+/* Formulario WhatsApp */
+.wsp-form {
+  background: var(--negro3);
+  border: 1px solid rgba(212,175,55,0.15);
+  border-radius: 4px;
+  padding: 32px;
+}
+.wsp-form h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px; font-weight: 700; color: var(--blanco);
+  margin-bottom: 24px;
+}
+.form-group { margin-bottom: 18px; }
+.form-group label {
+  display: block; font-size: 11px; font-weight: 700;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: var(--gris); margin-bottom: 8px;
+}
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%; padding: 13px 16px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 2px; color: var(--blanco);
+  font-family: 'Raleway', sans-serif; font-size: 14px;
+  transition: border-color 0.2s;
+  outline: none;
+  -webkit-appearance: none;
+}
+.form-group select option { background: var(--negro3); color: var(--blanco); }
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus { border-color: var(--dorado3); }
+.form-group textarea { resize: vertical; min-height: 80px; }
+.form-row { display: grid; grid-template-columns:1fr 1fr; gap:14px; }
+
+.promo-check {
+  display: flex; align-items:center; gap:10px;
+  padding: 12px 16px;
+  background: rgba(192,57,43,0.08);
+  border: 1px solid rgba(192,57,43,0.2);
+  border-radius: 2px; cursor: pointer;
+  margin-bottom: 18px;
+}
+.promo-check input { width:16px; height:16px; accent-color: var(--rojo); cursor:pointer; }
+.promo-check label { font-size:13px; color:rgba(245,245,240,0.8); cursor:pointer; }
+.promo-check label span { color: var(--rojo2); font-weight:700; }
+
+.domicilio-check {
+  display: flex; align-items:center; gap:10px;
+  padding: 12px 16px;
+  background: rgba(212,175,55,0.05);
+  border: 1px solid rgba(212,175,55,0.15);
+  border-radius: 2px; cursor: pointer;
+  margin-bottom: 18px;
+}
+.domicilio-check input { width:16px; height:16px; accent-color: var(--dorado); cursor:pointer; }
+.domicilio-check label { font-size:13px; color:rgba(245,245,240,0.8); cursor:pointer; }
+
+.btn-wsp {
+  width: 100%; padding: 16px;
+  background: #25D366;
+  color: white; border:none; border-radius: 2px;
+  font-family: 'Raleway', sans-serif;
+  font-size: 14px; font-weight: 800; letter-spacing: 2px; text-transform:uppercase;
+  cursor: pointer; transition: all 0.25s;
+  display: flex; align-items:center; justify-content:center; gap:10px;
+  box-shadow: 0 4px 20px rgba(37,211,102,0.25);
+}
+.btn-wsp:hover { background: #20bd5a; transform: translateY(-1px); }
+.btn-wsp:active { transform: scale(0.98); }
+
+/* ── PRECIO TOTAL ── */
+.precio-total-box {
+  background: rgba(212,175,55,0.06);
+  border: 1px solid rgba(212,175,55,0.2);
+  border-radius: 2px;
+  padding: 14px 16px;
+  margin-bottom: 18px;
+  display: flex; justify-content:space-between; align-items:center;
+}
+.precio-total-box .label { font-size:12px; color:var(--gris); font-weight:600; letter-spacing:1px; text-transform:uppercase; }
+.precio-total-box .monto {
+  font-family: 'Playfair Display', serif;
+  font-size: 24px; font-weight:900; color: var(--dorado);
+}
+.precio-total-box .monto.descuento { color: var(--rojo2); }
+
+/* ── FOOTER ── */
+footer {
+  background: #050505;
+  border-top: 1px solid rgba(212,175,55,0.15);
+  padding: 40px 24px;
+  text-align:center;
+}
+footer .logo-footer {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px; font-weight:900; color: var(--dorado);
+  letter-spacing: 3px; margin-bottom: 10px;
+}
+footer .logo-footer span { color: var(--rojo); }
+footer p { font-size: 13px; color: var(--gris); margin-bottom: 4px; }
+footer .horario-footer { color: rgba(212,175,55,0.7); font-size:13px; margin-bottom:16px; }
+footer .copy { font-size: 11px; color: var(--gris2); margin-top: 20px; }
+
+/* ── WAP FLOTANTE ── */
+.wsp-float {
+  position: fixed; bottom:24px; right:24px; z-index:200;
+  width:58px; height:58px; border-radius:50%;
+  background: #25D366;
+  display: flex; align-items:center; justify-content:center;
+  font-size: 28px; cursor:pointer;
+  box-shadow: 0 4px 20px rgba(37,211,102,0.4);
+  transition: all 0.2s;
+  text-decoration:none;
+}
+.wsp-float:hover { transform: scale(1.1); box-shadow: 0 6px 28px rgba(37,211,102,0.55); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .nav-links { display:none; }
+  .hero-stats { gap:28px; }
+  .reserva-container { grid-template-columns:1fr; gap:36px; }
+  .galeria-grid { grid-template-columns: repeat(2,1fr); }
+  .promo-amigo-banner { flex-direction:column; text-align:center; }
+  .promo-badge { margin-left:0; }
+  .domicilio-card { flex-direction:column; text-align:center; }
+  .domicilio-extra { margin-left:0; }
+  .form-row { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">NaHv<span>'</span>S</div>
+  <div class="nav-links">
+    <a href="#servicios">Servicios</a>
+    <a href="#galeria">Galería</a>
+    <a href="#reserva">Reservar</a>
+  </div>
+</nav>
+
+<!-- HORARIOS BANNER -->
+<div class="horarios-banner" style="margin-top:53px;">
+  ⏰ Horarios de atención
+  <span>|</span>
+  Lunes a Sábado
+  <span>10:00 — 18:00 hs</span>
+  <span>|</span>
+  📍 Río Grande, Tierra del Fuego
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">Barbería Profesional</div>
+  <h1>NaHv<span class="hero-apostrophe">'</span><span>S</span></h1>
+  <div class="hero-sub">Estilo · Precisión · Confianza</div>
+  <p class="hero-tagline">Tu imagen, nuestro arte. Cortes clásicos y modernos con el estilo que te representa.</p>
+  <div class="hero-cta">
+    <button class="btn-gold" onclick="document.getElementById('reserva').scrollIntoView({behavior:'smooth'})">Reservar turno</button>
+    <button class="btn-outline" onclick="document.getElementById('servicios').scrollIntoView({behavior:'smooth'})">Ver precios</button>
+  </div>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-num">5★</div><div class="stat-label">Calidad</div></div>
+    <div class="stat"><div class="stat-num">L-S</div><div class="stat-label">Abierto</div></div>
+    <div class="stat"><div class="stat-num">🏠</div><div class="stat-label">A domicilio</div></div>
+  </div>
+</section>
+
+<!-- SERVICIOS -->
+<section id="servicios">
+  <div class="max-w">
+    <div class="section-tag">Nuestros servicios</div>
+    <div class="section-title">Precios <span>en pesos</span></div>
+
+    <div class="servicios-grid">
+
+      <div class="servicio-card">
+        <div class="servicio-ico">✂️</div>
+        <div class="servicio-nombre">Corte Clásico</div>
+        <div class="servicio-desc">Corte tradicional con tijera y máquina. Incluye lavado y peinado final.</div>
+        <div class="servicio-precio"><span class="moneda">$</span>15.000</div>
+      </div>
+
+      <div class="servicio-card">
+        <div class="servicio-ico">💈</div>
+        <div class="servicio-nombre">Corte + Barba</div>
+        <div class="servicio-desc">Combo completo: corte de cabello y arreglo de barba con perfilado.</div>
+        <div class="servicio-precio"><span class="moneda">$</span>20.000</div>
+        <div class="servicio-tag tag-promo">⭐ Más pedido</div>
+      </div>
+
+      <div class="servicio-card">
+        <div class="servicio-ico">🪒</div>
+        <div class="servicio-nombre">Barba Sola</div>
+        <div class="servicio-desc">Arreglo, perfilado y terminación de barba. Navajazo incluido.</div>
+        <div class="servicio-precio"><span class="moneda">$</span>7.000</div>
+      </div>
+
+    </div>
+
+    <!-- PROMO AMIGO -->
+    <div class="promo-amigo-banner">
+      <div class="promo-ico">🤝</div>
+      <div class="promo-text">
+        <h3>Promo Amigo — ¡Traé a alguien y ahorrás!</h3>
+        <p>Si traés un amigo por primera vez, <strong style="color:var(--rojo2)">vos pagás un 20% menos</strong> en tu servicio del día. El descuento aplica solo para quien trae al amigo, no para el amigo. ¡Una vez por persona!</p>
+      </div>
+      <div class="promo-badge">-20%<small>PROMO AMIGO</small></div>
+    </div>
+
+    <!-- DOMICILIO -->
+    <div class="domicilio-card">
+      <div style="font-size:36px">🏠</div>
+      <div>
+        <h3>Servicio a Domicilio</h3>
+        <p>Te atendemos en tu casa dentro del <strong style="color:var(--dorado)">centro de Río Grande</strong>. Mismo servicio, misma calidad. Coordinamos horario por WhatsApp.</p>
+      </div>
+      <div class="domicilio-extra">
+        <div class="precio-extra">+ $5.000</div>
+        <small>adicional al precio del servicio</small>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- GALERÍA -->
+<section id="galeria">
+  <div class="max-w">
+    <div class="section-tag">Nuestro trabajo</div>
+    <div class="section-title">Galería <span>de estilos</span></div>
+    <!-- aviso instrucción -->
+    <div id="aviso-galeria" style="background:rgba(212,175,55,0.08);border:1px dashed rgba(212,175,55,0.4);border-radius:6px;padding:14px 18px;margin-bottom:20px;display:flex;align-items:center;gap:14px;">
+      <span style="font-size:24px">📸</span>
+      <div style="flex:1;">
+        <div style="font-size:13px;font-weight:700;color:#d4af37;margin-bottom:3px;">GALERÍA — Pendiente de fotos</div>
+        <div style="font-size:12px;color:#888;line-height:1.5;">Tocá cada casillero para agregar tus fotos desde el celular. Se guardan automáticamente.</div>
+      </div>
+      <button onclick="document.getElementById('aviso-galeria').style.display='none'" style="background:none;border:none;color:#888;font-size:20px;cursor:pointer;">✕</button>
+    </div>
+
+    <div class="galeria-grid" id="galeria-grid">
+      <div class="galeria-item slot" id="slot-0" onclick="abrirSelector(0)" style="cursor:pointer;">
+        <div class="slot-placeholder" id="placeholder-0">
+          <div class="slot-ico">✂️</div>
+          <div class="slot-txt">Tocá para<br>agregar foto</div>
+        </div>
+        <img id="img-0" src="" alt="✂ Corte clásico" style="display:none; width:100%; height:100%; object-fit:cover;"/>
+        <span class="galeria-label">✂ Corte clásico</span>
+        <button class="slot-del" id="del-0" onclick="borrarFoto(event,0)" style="display:none;">✕</button>
+      </div>
+      <div class="galeria-item slot" id="slot-1" onclick="abrirSelector(1)" style="cursor:pointer;">
+        <div class="slot-placeholder" id="placeholder-1">
+          <div class="slot-ico">✂️</div>
+          <div class="slot-txt">Tocá para<br>agregar foto</div>
+        </div>
+        <img id="img-1" src="" alt="✂ Fade" style="display:none; width:100%; height:100%; object-fit:cover;"/>
+        <span class="galeria-label">✂ Fade</span>
+        <button class="slot-del" id="del-1" onclick="borrarFoto(event,1)" style="display:none;">✕</button>
+      </div>
+      <div class="galeria-item slot" id="slot-2" onclick="abrirSelector(2)" style="cursor:pointer;">
+        <div class="slot-placeholder" id="placeholder-2">
+          <div class="slot-ico">✂️</div>
+          <div class="slot-txt">Tocá para<br>agregar foto</div>
+        </div>
+        <img id="img-2" src="" alt="✂ Estilo moderno" style="display:none; width:100%; height:100%; object-fit:cover;"/>
+        <span class="galeria-label">✂ Estilo moderno</span>
+        <button class="slot-del" id="del-2" onclick="borrarFoto(event,2)" style="display:none;">✕</button>
+      </div>
+      <div class="galeria-item slot" id="slot-3" onclick="abrirSelector(3)" style="cursor:pointer;">
+        <div class="slot-placeholder" id="placeholder-3">
+          <div class="slot-ico">🪒</div>
+          <div class="slot-txt">Tocá para<br>agregar foto</div>
+        </div>
+        <img id="img-3" src="" alt="🪒 Barba" style="display:none; width:100%; height:100%; object-fit:cover;"/>
+        <span class="galeria-label">🪒 Barba</span>
+        <button class="slot-del" id="del-3" onclick="borrarFoto(event,3)" style="display:none;">✕</button>
+      </div>
+      <div class="galeria-item slot" id="slot-4" onclick="abrirSelector(4)" style="cursor:pointer;">
+        <div class="slot-placeholder" id="placeholder-4">
+          <div class="slot-ico">🪒</div>
+          <div class="slot-txt">Tocá para<br>agregar foto</div>
+        </div>
+        <img id="img-4" src="" alt="🪒 Barba perfilada" style="display:none; width:100%; height:100%; object-fit:cover;"/>
+        <span class="galeria-label">🪒 Barba perfilada</span>
+        <button class="slot-del" id="del-4" onclick="borrarFoto(event,4)" style="display:none;">✕</button>
+      </div>
+      <div class="galeria-item slot" id="slot-5" onclick="abrirSelector(5)" style="cursor:pointer;">
+        <div class="slot-placeholder" id="placeholder-5">
+          <div class="slot-ico">💈</div>
+          <div class="slot-txt">Tocá para<br>agregar foto</div>
+        </div>
+        <img id="img-5" src="" alt="💈 Barbería" style="display:none; width:100%; height:100%; object-fit:cover;"/>
+        <span class="galeria-label">💈 Barbería</span>
+        <button class="slot-del" id="del-5" onclick="borrarFoto(event,5)" style="display:none;">✕</button>
+      </div>
+      <div class="galeria-item slot" id="slot-6" onclick="abrirSelector(6)" style="cursor:pointer;">
+        <div class="slot-placeholder" id="placeholder-6">
+          <div class="slot-ico">✂️</div>
+          <div class="slot-txt">Tocá para<br>agregar foto</div>
+        </div>
+        <img id="img-6" src="" alt="✂ Corte + barba" style="display:none; width:100%; height:100%; object-fit:cover;"/>
+        <span class="galeria-label">✂ Corte + barba</span>
+        <button class="slot-del" id="del-6" onclick="borrarFoto(event,6)" style="display:none;">✕</button>
+      </div>
+      <div class="galeria-item slot" id="slot-7" onclick="abrirSelector(7)" style="cursor:pointer;">
+        <div class="slot-placeholder" id="placeholder-7">
+          <div class="slot-ico">🪒</div>
+          <div class="slot-txt">Tocá para<br>agregar foto</div>
+        </div>
+        <img id="img-7" src="" alt="🪒 Barba completa" style="display:none; width:100%; height:100%; object-fit:cover;"/>
+        <span class="galeria-label">🪒 Barba completa</span>
+        <button class="slot-del" id="del-7" onclick="borrarFoto(event,7)" style="display:none;">✕</button>
+      </div>
+      <div class="galeria-item slot" id="slot-8" onclick="abrirSelector(8)" style="cursor:pointer;">
+        <div class="slot-placeholder" id="placeholder-8">
+          <div class="slot-ico">✂️</div>
+          <div class="slot-txt">Tocá para<br>agregar foto</div>
+        </div>
+        <img id="img-8" src="" alt="✂ Urbano" style="display:none; width:100%; height:100%; object-fit:cover;"/>
+        <span class="galeria-label">✂ Urbano</span>
+        <button class="slot-del" id="del-8" onclick="borrarFoto(event,8)" style="display:none;">✕</button>
+      </div>
+    </div>
+    <!-- inputs de archivo ocultos, uno por slot -->
+    <div id="file-inputs"></div>
+  </div>
+</section>
+
+<!-- RESERVA -->
+<section id="reserva">
+  <div class="max-w">
+    <div class="reserva-container">
+
+      <div class="reserva-info">
+        <div class="section-tag">¿Listo para tu corte?</div>
+        <h2>Reservá<br><span>tu turno</span></h2>
+        <div class="divider"></div>
+        <p>Completá el formulario y te enviamos un mensaje de confirmación por WhatsApp. Atención personalizada, sin esperas.</p>
+
+        <div class="info-row"><span class="info-ico">📍</span> Río Grande, Tierra del Fuego</div>
+        <div class="info-row"><span class="info-ico">⏰</span> Lunes a Sábado · 10:00 — 18:00 hs</div>
+        <div class="info-row"><span class="info-ico">📱</span> WhatsApp: (2964) 608-518</div>
+        <div class="info-row"><span class="info-ico">🏠</span> Servicio a domicilio en el centro (+$5.000)</div>
+        <div class="info-row"><span class="info-ico">🤝</span> Promo amigo: -20% para quien trae</div>
+      </div>
+
+      <div class="wsp-form">
+        <h3>📋 Datos del turno</h3>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Tu nombre</label>
+            <input type="text" id="inp-nombre" placeholder="Ej: Juan García" />
+          </div>
+          <div class="form-group">
+            <label>Tu teléfono</label>
+            <input type="tel" id="inp-tel" placeholder="Ej: 2964 123456" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Servicio</label>
+          <select id="inp-servicio" onchange="calcularPrecio()">
+            <option value="">— Elegí un servicio —</option>
+            <option value="Corte Clásico|15000">Corte Clásico — $15.000</option>
+            <option value="Corte + Barba|20000">Corte + Barba — $20.000</option>
+            <option value="Barba Sola|7000">Barba Sola — $7.000</option>
+          </select>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Día preferido</label>
+            <input type="date" id="inp-fecha" />
+          </div>
+          <div class="form-group">
+            <label>Hora preferida</label>
+            <select id="inp-hora">
+              <option value="">— Hora —</option>
+              <option>10:00</option><option>10:30</option>
+              <option>11:00</option><option>11:30</option>
+              <option>12:00</option><option>12:30</option>
+              <option>13:00</option><option>13:30</option>
+              <option>14:00</option><option>14:30</option>
+              <option>15:00</option><option>15:30</option>
+              <option>16:00</option><option>16:30</option>
+              <option>17:00</option><option>17:30</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="promo-check" onclick="togglePromo()">
+          <input type="checkbox" id="chk-promo" onchange="calcularPrecio()" />
+          <label for="chk-promo">🤝 Aplico <span>Promo Amigo</span> — me trae / traigo un amigo hoy (<span>-20%</span>)</label>
+        </div>
+
+        <div class="domicilio-check" onclick="toggleDomicilio()">
+          <input type="checkbox" id="chk-domicilio" onchange="calcularPrecio()" />
+          <label for="chk-domicilio">🏠 Quiero servicio a domicilio (centro de Río Grande, +$5.000)</label>
+        </div>
+
+        <div class="precio-total-box" id="precio-box" style="display:none;">
+          <span class="label">Total estimado</span>
+          <span class="monto" id="precio-total">$0</span>
+        </div>
+
+        <div class="form-group">
+          <label>Mensaje adicional (opcional)</label>
+          <textarea id="inp-msg" placeholder="Ej: corte largo, fade bajo, barba corta..."></textarea>
+        </div>
+
+        <button class="btn-wsp" onclick="enviarWhatsApp()">
+          💬 Confirmar por WhatsApp
+        </button>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="logo-footer">NaHv<span>'</span>S</div>
+  <p>Barbería profesional en Río Grande, Tierra del Fuego</p>
+  <p class="horario-footer">Lunes a Sábado · 10:00 — 18:00 hs</p>
+  <p>📱 WhatsApp: (2964) 608-518</p>
+  <div class="copy">© 2025 NaHv'S Barbería · Hecho con ✂️</div>
+</footer>
+
+<!-- BOTÓN FLOTANTE WHATSAPP -->
+<a class="wsp-float" href="https://wa.me/542964608518" target="_blank" title="WhatsApp">💬</a>
+
+<script>
+// ── Fecha mínima = hoy ──────────────────────────────────────────────────────
+const hoy = new Date();
+const yyyy = hoy.getFullYear();
+const mm = String(hoy.getMonth()+1).padStart(2,'0');
+const dd = String(hoy.getDate()).padStart(2,'0');
+document.getElementById('inp-fecha').min = `${yyyy}-${mm}-${dd}`;
+document.getElementById('inp-fecha').value = `${yyyy}-${mm}-${dd}`;
+
+// ── Calcular precio ─────────────────────────────────────────────────────────
+function calcularPrecio() {
+  const sel = document.getElementById('inp-servicio').value;
+  if (!sel) { document.getElementById('precio-box').style.display='none'; return; }
+
+  const precio = parseInt(sel.split('|')[1]);
+  const promo = document.getElementById('chk-promo').checked;
+  const domicilio = document.getElementById('chk-domicilio').checked;
+
+  let total = precio;
+  if (promo) total = Math.round(total * 0.8);
+  if (domicilio) total += 5000;
+
+  const box = document.getElementById('precio-box');
+  const el = document.getElementById('precio-total');
+  box.style.display = 'flex';
+  el.textContent = '$' + total.toLocaleString('es-AR');
+  el.className = 'monto' + (promo ? ' descuento' : '');
+}
+
+function togglePromo() {
+  const chk = document.getElementById('chk-promo');
+  chk.checked = !chk.checked;
+  calcularPrecio();
+}
+function toggleDomicilio() {
+  const chk = document.getElementById('chk-domicilio');
+  chk.checked = !chk.checked;
+  calcularPrecio();
+}
+
+// ── Enviar por WhatsApp ─────────────────────────────────────────────────────
+function enviarWhatsApp() {
+  const nombre   = document.getElementById('inp-nombre').value.trim();
+  const tel      = document.getElementById('inp-tel').value.trim();
+  const servSel  = document.getElementById('inp-servicio').value;
+  const fecha    = document.getElementById('inp-fecha').value;
+  const hora     = document.getElementById('inp-hora').value;
+  const promo    = document.getElementById('chk-promo').checked;
+  const domicilio= document.getElementById('chk-domicilio').checked;
+  const msg      = document.getElementById('inp-msg').value.trim();
+
+  if (!nombre) { alert('Por favor ingresá tu nombre.'); return; }
+  if (!servSel) { alert('Por favor elegí un servicio.'); return; }
+  if (!fecha || !hora) { alert('Por favor elegí día y hora.'); return; }
+
+  const servNombre = servSel.split('|')[0];
+  const precioBase = parseInt(servSel.split('|')[1]);
+  let total = precioBase;
+  if (promo) total = Math.round(total * 0.8);
+  if (domicilio) total += 5000;
+
+  // Formatear fecha
+  const [y,m,d] = fecha.split('-');
+  const dias = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+  const fechaObj = new Date(fecha+'T12:00:00');
+  const diaStr = dias[fechaObj.getDay()];
+
+  let texto = `✂️ *NUEVA RESERVA — NaHv'S Barbería*\n\n`;
+  texto += `👤 *Nombre:* ${nombre}\n`;
+  if (tel) texto += `📱 *Teléfono:* ${tel}\n`;
+  texto += `💈 *Servicio:* ${servNombre}\n`;
+  texto += `📅 *Día:* ${diaStr} ${d}/${m}/${y}\n`;
+  texto += `⏰ *Hora:* ${hora} hs\n`;
+  if (domicilio) texto += `🏠 *A domicilio:* Sí (+$5.000, centro)\n`;
+  if (promo) texto += `🤝 *Promo Amigo:* Sí (-20%)\n`;
+  texto += `\n💰 *Total estimado: $${total.toLocaleString('es-AR')}*\n`;
+  if (msg) texto += `\n💬 *Nota:* ${msg}\n`;
+  texto += `\n_Reserva enviada desde nahvs.app_`;
+
+  const url = `https://wa.me/542964608518?text=${encodeURIComponent(texto)}`;
+  window.open(url, '_blank');
+}
+
+// ── Scroll suave nav ────────────────────────────────────────────────────────
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    document.querySelector(a.getAttribute('href'))
+      ?.scrollIntoView({ behavior: 'smooth' });
+  });
+});
+
+// ── SISTEMA DE GALERÍA CON FOTOS PROPIAS ────────────────────────────────────
+const TOTAL_SLOTS = 9;
+
+// Crear inputs de archivo ocultos
+const fileInputsDiv = document.getElementById('file-inputs');
+for (let i = 0; i < TOTAL_SLOTS; i++) {
+  const inp = document.createElement('input');
+  inp.type = 'file';
+  inp.accept = 'image/*';
+  inp.id = `file-inp-${i}`;
+  inp.style.display = 'none';
+  inp.addEventListener('change', (e) => cargarFoto(e, i));
+  fileInputsDiv.appendChild(inp);
+}
+
+// Cargar fotos guardadas al iniciar
+window.addEventListener('load', () => {
+  for (let i = 0; i < TOTAL_SLOTS; i++) {
+    const saved = localStorage.getItem(`nahvs_foto_${i}`);
+    if (saved) mostrarFoto(i, saved);
+  }
+});
+
+function abrirSelector(i) {
+  document.getElementById(`file-inp-${i}`).click();
+}
+
+function cargarFoto(e, i) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    const dataUrl = ev.target.result;
+    localStorage.setItem(`nahvs_foto_${i}`, dataUrl);
+    mostrarFoto(i, dataUrl);
+  };
+  reader.readAsDataURL(file);
+}
+
+function mostrarFoto(i, src) {
+  const placeholder = document.getElementById(`placeholder-${i}`);
+  const img = document.getElementById(`img-${i}`);
+  const del = document.getElementById(`del-${i}`);
+  const slot = document.getElementById(`slot-${i}`);
+  placeholder.style.display = 'none';
+  img.src = src;
+  img.style.display = 'block';
+  del.style.display = 'flex';
+  slot.style.cursor = 'default';
+  slot.onclick = null;
+}
+
+function borrarFoto(e, i) {
+  e.stopPropagation();
+  localStorage.removeItem(`nahvs_foto_${i}`);
+  const placeholder = document.getElementById(`placeholder-${i}`);
+  const img = document.getElementById(`img-${i}`);
+  const del = document.getElementById(`del-${i}`);
+  const slot = document.getElementById(`slot-${i}`);
+  img.src = ''; img.style.display = 'none';
+  del.style.display = 'none';
+  placeholder.style.display = 'flex';
+  slot.style.cursor = 'pointer';
+  slot.onclick = () => abrirSelector(i);
+  // limpiar input
+  document.getElementById(`file-inp-${i}`).value = '';
+}
+</script>
+</body>
+</html>
